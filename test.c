@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <unistd.h>
+#include <time.h>
 
 #define FPS 30
 #define WIDTH 640 / 11
@@ -149,6 +149,6 @@ void main () {
 	while (1) {
 		draw();
 		update();
-		usleep(1000 / (double) FPS);
+		nanosleep((const struct timespec[]){{0, 1000 * (double) FPS}}, NULL);
 	}
 }
