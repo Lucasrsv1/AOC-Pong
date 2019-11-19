@@ -44,11 +44,11 @@ int isPixelOn (int x, int y) {
 		return 1;
 
 	// Valida se o pixel compoem a barra 1
-	if (x == leftBar.x && (y >= leftBar.y && y <= leftBar.y + BAR_HEIGHT))
+	if (x == leftBar.x && y >= leftBar.y && y <= leftBar.y + BAR_HEIGHT)
 		return 1;
 
 	// Valida se o pixel compoem a barra 2
-	if (x == rightBar.x && (y >= rightBar.y && y <= rightBar.y + BAR_HEIGHT))
+	if (x == rightBar.x && y >= rightBar.y && y <= rightBar.y + BAR_HEIGHT)
 		return 1;
 
 	return 0;
