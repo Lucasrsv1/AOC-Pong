@@ -34,11 +34,8 @@ MAIN:
 	addi $a0, $zero, 1	# Manda pular a inicialização do buffer de imagem
 	jal START
 
-	# Testa a função IS_PIXEL_ON
-	addi $a0, $zero, 5
-	addi $a1, $zero, 207
-	jal IS_PIXEL_ON
-	add $s0, $zero, $v0	# Escreve o resultado de IS_PIXEL_ON no $s0 (1 = pixel aceso, 0 = pixel apagado)
+	# Testa a função DRAW
+	jal DRAW
 
 	j EXIT
 
@@ -163,5 +160,35 @@ IS_PIXEL_ON:			# $a0 = x, $a1 = y
 
 	add $v0, $zero, $zero	# res = 0
 IPO_R:	jr $ra
+
+DRAW:	
+	addi $s3, $sp, 307230	# faz $s3 apontar para o byte do primeiro pixel
+	addi $sp, $sp, -6
+	sw $ra, ($sp)
+	
+	add $s0, $zero, $zero	# y = 0
+	add $s1, $zero, $zero	# x = 0
+D_FOR:	add $a0, $s1, $zero
+	add $a1, $s0, $zero
+	jal IS_PIXEL_ON		# isPixelOn(x, y)
+	
+	# Salva pixel no buffer de imagem
+	sb $v0, ($s3)
+	addi $s3, $s3, -1
+	
+	addi $s1, $s1, 1	# x++
+	addi $t0, $zero, 640
+	slt $s2, $s1, $t0	# x < 640
+	bne $s2, $zero, D_FOR
+	
+	add $s1, $zero, $zero	# x = 0
+	addi $s0, $s0, 1	# y++
+	addi $t0, $zero, 480
+	slt $s2, $s0, $t0	# y < 480
+	bne $s2, $zero, D_FOR
+	
+	lw $ra, ($sp)
+	addi $sp, $sp, 6
+	jr $ra
 
 EXIT:
