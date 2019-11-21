@@ -152,4 +152,3 @@ void main () {
 		nanosleep((const struct timespec[]){{0, 1000 * (double) FPS}}, NULL);
 	}
 }
-//teste git
