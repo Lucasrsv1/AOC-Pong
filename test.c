@@ -70,7 +70,9 @@ void changeBarDirection (Object * bar) {
 }
 
 void draw () {
-	system("clear");
+	// Limpa a tela
+	printf("\033c");
+
 	printf("Left Bar Score: %d\t|\tRight Bar Score: %d\n", leftScore, rightScore);
 
 	for (int y = 0; y < HEIGHT; y++) {
@@ -81,11 +83,22 @@ void draw () {
 	}
 }
 
+void initializeBall () {
+	ball.x = WIDTH / 2;
+	ball.y = HEIGHT / 2;
+
+	// Escolhe direção aleatória para a bola
+	ball.direction.x = rand() % 10 >= 5 ? 1 : -1;
+	ball.direction.y = rand() % 10 >= 5 ? 1 : -1;
+}
+
 void start () {
 	for (int y = 0; y < HEIGHT; y++) {
 		for (int x = 0; x < WIDTH; x++)
 			vgaBuffer[y][x] = PIXEL_OFF;
 	}
+
+	initializeBall();
 }
 
 void update () {
@@ -135,8 +148,7 @@ void update () {
 			ball.direction.x = -1;
 		}
 
-		ball.x = WIDTH / 2;
-		ball.y = HEIGHT / 2;
+		initializeBall();
 	} else {
 		// Bola ainda em jogo
 		vgaBuffer[ball.y][ball.x] = BALL_PIXEL;
@@ -144,12 +156,13 @@ void update () {
 }
 
 void main () {
+	srand(time(NULL));
 	start();
 
 	while (1) {
 		draw();
 		update();
-		nanosleep((const struct timespec[]){{0, 1000 * (double) FPS}}, NULL);
+		nanosleep((const struct timespec[]){{0, 1000 * (double) (1000 / FPS)}}, NULL);
 	}
 }
 //
