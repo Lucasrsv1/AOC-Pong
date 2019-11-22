@@ -99,6 +99,27 @@ S_BARS:	addi $sp, $sp, -307202
 
 	jr $ra
 
+MOVE_OBJECT:
+	lh  $t0, -6($a0)	# Carrega obj->inertia
+	addi $t0, $t0, -1	# Subtrai 1  de obj->inertia
+	sh $t0, -6($a0)		# Atualiza $a0 com a subtração ocorrida
+	bne $t0, $zero, MV;	# Se diferente de zero da jump
+	
+	lh $t1, -2($a0)		# Carrega obj->x
+	lh $t2, -10($a0)	# Carrega obj->direction.x
+	add $t1, $t1, $t2	# Soma e atualiza obj->x com obj->direction.x
+	sh $t1, -2($a0) 	# Salva resultado soma
+	
+	lh $t3, -4($a0)		# Carrega obj->y
+	lh $t4, -12($a0)	# Carrega obj->direction.y
+	sub $t3, $t3, $t4 	# Subtrai e atualiza obj->y com obj->direction.y
+	sh $t3, -4($a0) 	# Salva resultado subtração
+	
+	sh $a1, -6($a0)		# Atualiza obj->inertia com originalinertia
+		
+MV:	jr $ra
+	
+
 IS_PIXEL_ON:			# $a0 = x, $a1 = y
 	addi $v0, $zero, 1	# res = 1
 
