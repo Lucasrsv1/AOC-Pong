@@ -165,4 +165,3 @@ void main () {
 		nanosleep((const struct timespec[]){{0, 1000 * (double) (1000 / FPS)}}, NULL);
 	}
 }
-//
