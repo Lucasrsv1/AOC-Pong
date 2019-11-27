@@ -141,6 +141,51 @@ MOVE_OBJECT:
 
 MV:	jr $ra
 
+CHANGE_BAR_DIRECTION:
+        daddiu  $sp,$sp,-32
+        sd      $fp,24($sp)
+        move    $fp,$sp
+        lui     $5,%hi(%neg(%gp_rel(changeBarDirection(object*))))
+        daddu   $5,$5,$25
+        daddiu  $5,$5,%lo(%neg(%gp_rel(changeBarDirection(object*))))
+        sd      $4,0($fp)
+        ld      $2,%got_disp(ball)($5)
+        lw      $3,4($2)
+        ld      $2,0($fp)
+        lw      $2,4($2)
+        addiu   $2,$2,3
+        slt     $2,$3,$2
+        beq     $2,$0,.L12
+        nop
+
+        ld      $2,0($fp)
+        li      $3,1                        
+        sw      $3,16($2)
+        b       .L14
+        nop
+
+.L12:
+        ld      $2,%got_disp(ball)($5)
+        lw      $3,4($2)
+        ld      $2,0($fp)
+        lw      $2,4($2)
+        addiu   $2,$2,3
+        slt     $2,$2,$3
+        beq     $2,$0,.L14
+        nop
+
+        ld      $2,0($fp)
+        li      $3,-1                
+        sw      $3,16($2)
+.L14:
+        nop
+        move    $sp,$fp
+        ld      $fp,24($sp)
+        daddiu  $sp,$sp,32
+        j       $31
+        nop
+	
+
 
 IS_PIXEL_ON:			# $a0 = x, $a1 = y
 	addi $v0, $zero, 1	# res = 1
