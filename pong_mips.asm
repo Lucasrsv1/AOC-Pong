@@ -142,49 +142,21 @@ MOVE_OBJECT:
 MV:	jr $ra
 
 CHANGE_BAR_DIRECTION:
-        daddiu  $sp,$sp,-32
-        sd      $fp,24($sp)
-        move    $fp,$sp
-        lui     $5,%hi(%neg(%gp_rel(changeBarDirection(object*))))
-        daddu   $5,$5,$25
-        daddiu  $5,$5,%lo(%neg(%gp_rel(changeBarDirection(object*))))
-        sd      $4,0($fp)
-        ld      $2,%got_disp(ball)($5)
-        lw      $3,4($2)
-        ld      $2,0($fp)
-        lw      $2,4($2)
-        addiu   $2,$2,3
-        slt     $2,$3,$2
-        beq     $2,$0,.L12
-        nop
-
-        ld      $2,0($fp)
-        li      $3,1                        
-        sw      $3,16($2)
-        b       .L14
-        nop
-
-.L12:
-        ld      $2,%got_disp(ball)($5)
-        lw      $3,4($2)
-        ld      $2,0($fp)
-        lw      $2,4($2)
-        addiu   $2,$2,3
-        slt     $2,$2,$3
-        beq     $2,$0,.L14
-        nop
-
-        ld      $2,0($fp)
-        li      $3,-1                
-        sw      $3,16($2)
-.L14:
-        nop
-        move    $sp,$fp
-        ld      $fp,24($sp)
-        daddiu  $sp,$sp,32
-        j       $31
-        nop
-	
+	lh $t0, 6($t1)          # carrega ball.y
+	lh $t5, -2($sp)		# carrega bar->y
+	addi $t6,$t5,3		# soma bar->y + BAR_HEIGHT / 2
+	slt $s1,$t0,$t6		# confere se ball.y é menor que o resultado anterior
+	addi $t7,$zero,1	# torna um registrador = 1
+	beq $t7,$s1,DESVIO	# faz a comparaçao e oredena para o if(DESVIO) ou o esle(OUT)
+	#instrução
+	j Out 			# faz o pulo para o else
+	DESVIO:
+		sh $t7,-8($sp)	# Salva a direçao da barra como 1 bar->direction.y = 1;
+		jr $ra
+	Out:
+		addi $t8,$zero,-1# torna um registrador = -1
+		sh $t8,-8($sp)	# Salva a direçao da barra como 1 bar->direction.y = -1;
+		jr $ra
 
 
 IS_PIXEL_ON:			# $a0 = x, $a1 = y
