@@ -131,22 +131,19 @@ void update () {
 
 	// Aplica decisão de movimento das barras
 	if (ball.direction.x == -1) {
-		changeBarDirection(&leftBar);   // Move barra da esquerda
+		changeBarDirection(&leftBar);	// Decide movimento da barra da esquerda
 		rightBar.direction.y = 0;
 	} else {
-		changeBarDirection(&rightBar);	// Move barra da direita
+		changeBarDirection(&rightBar);	// Decide movimento da barra da direita
 		leftBar.direction.y = 0;
 	}
 
-	// Avalia condição de fim de jogo
+	// Avalia condição de gol
 	if (ball.x <= 1 || ball.x >= WIDTH - 1) {
-		if (ball.x <= 1) {
+		if (ball.x <= 1)
 			rightScore++;
-			ball.direction.x = 1;
-		} else {
+		else
 			leftScore++;
-			ball.direction.x = -1;
-		}
 
 		initializeBall();
 	} else {
@@ -162,6 +159,6 @@ void main () {
 	while (1) {
 		draw();
 		update();
-		nanosleep((const struct timespec[]){{0, 1000 * (double) (1000 / FPS)}}, NULL);
+		nanosleep((const struct timespec[]){{0, 1000 * (double) (1000000 / FPS)}}, NULL);
 	}
 }
